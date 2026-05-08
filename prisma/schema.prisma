@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Wedding {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  domain        String?  @unique
+
+  partner1Name  String
+  partner2Name  String
+  weddingDate   DateTime?
+  timezone      String   @default("America/Santiago")
+
+  venueName     String?
+  venueAddress  String?
+  venueMapsUrl  String?
+  scheduleItems Json     @default("[]")
+  dressCode     String?
+  coverImageUrl String?
+
+  rsvpDeadline  DateTime?
+  rsvpEnabled   Boolean  @default(true)
+  locale        String   @default("es")
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  guests        Guest[]
+  gifts         GiftItem[]
+  admins        WeddingAdmin[]
+
+  @@index([slug])
+  @@index([domain])
+}
+
+model WeddingAdmin {
+  id           String   @id @default(cuid())
+  weddingId    String
+  wedding      Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  email        String
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@unique([weddingId, email])
+}
+
+model Guest {
+  id            String    @id @default(cuid())
+  weddingId     String
+  wedding       Wedding   @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  token         String    @unique
+  firstName     String
+  lastName      String
+  email         String?
+  phone         String?
+
+  maxCompanions Int       @default(0)
+  group         String?
+  table         String?
+  notes         String?
+
+  inviteSentAt  DateTime?
+  inviteCount   Int       @default(0)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  rsvp          RSVP?
+  history       RSVPHistory[]
+
+  @@index([weddingId])
+  @@index([token])
+  @@index([weddingId, group])
+}
+
+model RSVP {
+  id                  String     @id @default(cuid())
+  guestId             String     @unique
+  guest               Guest      @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  status              RSVPStatus @default(PENDING)
+  companions          Json       @default("[]")
+  dietaryRestrictions String?
+  message             String?
+
+  submittedAt         DateTime?
+  updatedAt           DateTime   @updatedAt
+  ipAddress           String?
+  userAgent           String?
+}
+
+enum RSVPStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+}
+
+model RSVPHistory {
+  id         String     @id @default(cuid())
+  guestId    String
+  guest      Guest      @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  fromStatus RSVPStatus?
+  toStatus   RSVPStatus
+  snapshot   Json
+  changedAt  DateTime   @default(now())
+  ipAddress  String?
+
+  @@index([guestId])
+  @@index([changedAt])
+}
+
+model GiftItem {
+  id          String   @id @default(cuid())
+  weddingId   String
+  wedding     Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  url         String?
+  imageUrl    String?
+  price       Decimal? @db.Decimal(10, 2)
+  currency    String   @default("CLP")
+  isReserved  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([weddingId, sortOrder])
+}

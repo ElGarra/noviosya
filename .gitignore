@@ -1,0 +1,19 @@
+# env
+.env.local
+.env*.local
+
+# Next.js
+.next/
+out/
+
+# Node
+node_modules/
+
+# Prisma
+prisma/migrations/dev.db
+
+# OS
+.DS_Store
+
+# Vercel
+.vercel
