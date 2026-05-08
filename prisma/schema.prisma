@@ -55,8 +55,23 @@ model WeddingAdmin {
   name         String?
   createdAt    DateTime  @default(now())
 
+  resetTokens  PasswordResetToken[]
+
   @@unique([weddingId, email])
   @@index([weddingId, role])
+}
+
+model PasswordResetToken {
+  id        String       @id @default(cuid())
+  adminId   String
+  admin     WeddingAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  token     String       @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime     @default(now())
+
+  @@index([token])
+  @@index([adminId])
 }
 
 model Guest {

@@ -10,6 +10,7 @@ const nav = [
   { href: '/couple/guests',    label: 'Invitados' },
   { href: '/couple/rsvps',     label: 'RSVPs' },
   { href: '/couple/gifts',     label: 'Regalos' },
+  { href: '/couple/account',   label: 'Mi cuenta' },
 ]
 
 export default async function CoupleLayout({ children }: { children: React.ReactNode }) {
