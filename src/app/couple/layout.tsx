@@ -1,5 +1,4 @@
 import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { SessionProvider } from '@/app/admin/SessionProvider'
@@ -15,12 +14,15 @@ const nav = [
 
 export default async function CoupleLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
-  if (!session) redirect('/couple/login')
+
+  // No session → render children as-is (login page handles its own UI)
+  if (!session) {
+    return <SessionProvider>{children}</SessionProvider>
+  }
 
   return (
     <SessionProvider>
       <div className="min-h-svh flex flex-col bg-cream">
-        {/* Top nav */}
         <header className="bg-white border-b border-gold/20 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="font-serif italic text-gold text-lg">
