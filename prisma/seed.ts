@@ -15,6 +15,9 @@ async function main() {
       timezone: 'America/Santiago',
       locale: 'es',
       rsvpEnabled: true,
+      venueName: 'Casona San Ignacio',
+      venueAddress: 'Caupolicán 8611, Quilicura, Región Metropolitana, Chile',
+      venueMapsUrl: 'https://google.com/maps/place/Casona+San+Ignacio/@-33.3413588,-70.6944469,17z',
     },
   })
 
