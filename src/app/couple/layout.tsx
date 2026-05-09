@@ -7,7 +7,6 @@ const nav = [
   { href: '/couple/dashboard', label: 'Inicio' },
   { href: '/couple/wedding',   label: 'Nuestra boda' },
   { href: '/couple/guests',    label: 'Invitados' },
-  { href: '/couple/rsvps',     label: 'RSVPs' },
   { href: '/couple/gifts',     label: 'Regalos' },
   { href: '/couple/account',   label: 'Mi cuenta' },
 ]
