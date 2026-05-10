@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 import { z } from 'zod'
 
 const GiftSchema = z.object({
@@ -22,15 +23,16 @@ export async function POST(req: NextRequest) {
   if (!parsed.success)
     return NextResponse.json({ error: 'Invalid data', issues: parsed.error.issues }, { status: 400 })
 
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
   const lastGift = await prisma.giftItem.findFirst({
-    where: { weddingId: session.user.weddingId },
+    where: { weddingId },
     orderBy: { sortOrder: 'desc' },
     select: { sortOrder: true },
   })
 
   const gift = await prisma.giftItem.create({
     data: {
-      weddingId:   session.user.weddingId,
+      weddingId,
       title:       parsed.data.title,
       description: parsed.data.description ?? null,
       paymentUrl:  parsed.data.paymentUrl || null,

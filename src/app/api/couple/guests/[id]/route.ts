@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -25,9 +26,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (!parsed.success)
     return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
 
-  const guest = await prisma.guest.findFirst({
-    where: { id, weddingId: session.user.weddingId },
-  })
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  const guest = await prisma.guest.findFirst({ where: { id, weddingId } })
   if (!guest) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   const { email, table, ...rest } = parsed.data
@@ -35,18 +35,19 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     where: { id },
     data: {
       ...rest,
-      email:  email !== undefined ? (email || null) : undefined,
-      table:  table !== undefined ? (table || null)  : undefined,
+      email: email !== undefined ? (email || null) : undefined,
+      table: table !== undefined ? (table || null)  : undefined,
     },
   })
   return NextResponse.json({ guest: updated })
 }
 
-export async function DELETE(_req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  await prisma.guest.deleteMany({ where: { id, weddingId: session.user.weddingId } })
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  await prisma.guest.deleteMany({ where: { id, weddingId } })
   return NextResponse.json({ ok: true })
 }

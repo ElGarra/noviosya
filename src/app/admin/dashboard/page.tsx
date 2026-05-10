@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { FeatureToggles } from './FeatureToggles'
+import { SwitchWeddingButton } from './SwitchWeddingButton'
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)
@@ -74,12 +75,13 @@ export default async function AdminDashboard() {
                     <div className="flex gap-2 shrink-0 flex-wrap justify-end">
                       <Link href={`/${w.slug}`} target="_blank"
                         className="text-xs border border-gold/30 text-text-muted px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
-                        Ver landing ↗
+                        Ver ↗
                       </Link>
                       <Link href={`/admin/weddings/${w.id}`}
                         className="text-xs border border-gold/30 text-text-muted px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
-                        Gestionar
+                        Configurar
                       </Link>
+                      <SwitchWeddingButton weddingId={w.id} />
                     </div>
                   </div>
 

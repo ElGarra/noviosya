@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -27,8 +28,9 @@ export async function PATCH(req: NextRequest) {
 
   const { weddingDate, venueMapsUrl, ...rest } = parsed.data
 
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
   const wedding = await prisma.wedding.update({
-    where: { id: session.user.weddingId },
+    where: { id: weddingId },
     data: {
       ...rest,
       ...(weddingDate !== undefined && { weddingDate: weddingDate ? new Date(weddingDate) : null }),

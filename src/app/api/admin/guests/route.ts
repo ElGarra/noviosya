@@ -4,13 +4,15 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { generateToken } from '@/lib/tokens'
 import { GuestCreateSchema } from '@/schemas/guest'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
   const guests = await prisma.guest.findMany({
-    where: { weddingId: session.user.weddingId },
+    where: { weddingId },
     include: { rsvp: { select: { status: true } } },
     orderBy: { createdAt: 'desc' },
   })
@@ -27,11 +29,12 @@ export async function POST(req: NextRequest) {
   if (!parsed.success)
     return NextResponse.json({ error: 'Invalid data', issues: parsed.error.issues }, { status: 400 })
 
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
   const { firstName, lastName, email, phone, maxCompanions, group, notes } = parsed.data
 
   const guest = await prisma.guest.create({
     data: {
-      weddingId: session.user.weddingId,
+      weddingId,
       token: generateToken(),
       firstName,
       lastName,
