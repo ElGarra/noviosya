@@ -8,31 +8,20 @@ async function main() {
   const password = process.env.ADMIN_SEED_PASSWORD
   const name     = process.env.ADMIN_NAME ?? 'Admin'
 
-  if (!email || !password) {
-    throw new Error('ADMIN_EMAIL and ADMIN_SEED_PASSWORD env vars are required')
-  }
+  if (!email || !password)
+    throw new Error('Required: ADMIN_EMAIL and ADMIN_SEED_PASSWORD')
 
-  // Admin needs a wedding to be linked to — create a placeholder if none exists
-  let wedding = await prisma.wedding.findFirst()
-  if (!wedding) {
-    wedding = await prisma.wedding.create({
-      data: {
-        slug:         'mi-boda',
-        partner1Name: 'Novio',
-        partner2Name: 'Novia',
-      },
-    })
-    console.log('✓ Placeholder wedding created (update via admin panel)')
-  }
+  const wedding = await prisma.wedding.create({
+    data: { slug: 'default', partner1Name: 'Novio', partner2Name: 'Novia' },
+  })
 
-  const passwordHash = await bcrypt.hash(password, 12)
-  await prisma.weddingAdmin.upsert({
-    where: { weddingId_email: { weddingId: wedding.id, email } },
-    update: { passwordHash, name },
-    create: { weddingId: wedding.id, email, passwordHash, role: 'ADMIN', name },
+  const hash = await bcrypt.hash(password, 12)
+  await prisma.weddingAdmin.create({
+    data: { weddingId: wedding.id, email, passwordHash: hash, role: 'ADMIN', name },
   })
 
   console.log(`✓ Admin created: ${email}`)
+  console.log(`✓ Empty wedding placeholder created — update from admin panel`)
 }
 
 main()

@@ -1,7 +1,10 @@
 # env
 .env.local
 .env*.local
-tests/.env.test
+
+# local dev tooling — not part of the project
+TODO_TEST.md
+tests/
 
 # Next.js
 .next/
