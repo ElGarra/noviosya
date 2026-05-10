@@ -27,10 +27,16 @@ export default async function AdminDashboard() {
             <p className="text-[0.7rem] tracking-[0.3em] uppercase text-gold mb-1">Panel de administración</p>
             <h1 className="font-serif italic text-3xl text-text-base">Bodas</h1>
           </div>
-          <Link href="/admin/weddings/new"
-            className="bg-gold text-white px-5 py-2.5 text-sm tracking-wide hover:opacity-90 transition-opacity whitespace-nowrap">
-            + Nueva boda
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/admin/account"
+              className="border border-gold/30 text-text-muted px-4 py-2.5 text-sm hover:border-gold hover:text-gold transition-colors whitespace-nowrap">
+              Mi cuenta
+            </Link>
+            <Link href="/admin/weddings/new"
+              className="bg-gold text-white px-5 py-2.5 text-sm tracking-wide hover:opacity-90 transition-opacity whitespace-nowrap">
+              + Nueva boda
+            </Link>
+          </div>
         </div>
 
         {/* Lista de bodas */}

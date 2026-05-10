@@ -19,7 +19,7 @@ const FEATURES = [
   {
     icon: '≡',
     title: 'Panel de gestión',
-    desc: 'Todos los invitados, confirmaciones y regalos en un solo lugar. Filtrá, buscá, asigná mesas.',
+    desc: 'Todos los invitados, confirmaciones y regalos en un solo lugar. Filtra, busca, asigna mesas.',
   },
 ]
 
@@ -172,7 +172,7 @@ export default function HomePage() {
           </p>
           <a href="mailto:hola@noviosya.app?subject=Quiero%20probar%20noviosya"
             className="inline-block border border-gold text-gold px-8 py-3 text-sm tracking-[0.2em] uppercase hover:bg-gold hover:text-white transition-colors">
-            Escribinos
+            Escríbenos
           </a>
         </div>
       </section>

@@ -1,6 +1,7 @@
 # env
 .env.local
 .env*.local
+.env.production
 
 # local dev tooling — not part of the project
 TODO_TEST.md
