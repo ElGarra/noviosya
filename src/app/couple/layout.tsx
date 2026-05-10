@@ -28,7 +28,7 @@ export default async function CoupleLayout({ children }: { children: React.React
   // Admin without context switch has no wedding to manage here
   if (session.user.role === 'ADMIN' && !ctxWeddingId) redirect('/admin/dashboard')
 
-  const effectiveWeddingId = ctxWeddingId ?? session.user.weddingId
+  const effectiveWeddingId = ctxWeddingId ?? session.user.weddingId ?? ''
 
   const wedding = await prisma.wedding.findUnique({
     where: { id: effectiveWeddingId },

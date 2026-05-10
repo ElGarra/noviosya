@@ -2,13 +2,17 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getEffectiveWeddingId } from '@/lib/weddingContext'
 import { WeddingForm } from './WeddingForm'
 
 export default async function WeddingPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/couple/login')
 
-  const wedding = await prisma.wedding.findUnique({ where: { id: session.user.weddingId } })
+  const weddingId = await getEffectiveWeddingId(session)
+  if (!weddingId) redirect('/admin/dashboard')
+
+  const wedding = await prisma.wedding.findUnique({ where: { id: weddingId } })
   if (!wedding) redirect('/couple/dashboard')
 
   return (

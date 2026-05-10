@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         const u = user as { id: string; weddingId: string | null; role: string; name?: string | null }
         token.id        = u.id
-        token.weddingId = u.weddingId
+        token.weddingId = u.weddingId ?? undefined
         token.role      = u.role
         token.name      = u.name
       }
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
     },
     session({ session, token }) {
       session.user.id        = token.id as string
-      session.user.weddingId = (token.weddingId as string | null) ?? null
+      session.user.weddingId = (token.weddingId as string | undefined) ?? null
       session.user.role      = token.role as 'ADMIN' | 'COUPLE'
       session.user.name      = token.name as string
       return session

@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   const guests = await prisma.guest.findMany({
     where: { weddingId },
     include: { rsvp: { select: { status: true } } },
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid data', issues: parsed.error.issues }, { status: 400 })
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   const { firstName, lastName, email, phone, maxCompanions, group, notes } = parsed.data
 
   const guest = await prisma.guest.create({

@@ -4,10 +4,14 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { generateToken } from '@/lib/tokens'
 import { GuestImportRowSchema } from '@/schemas/guest'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
 
   const body = await req.json()
   const rows: unknown[] = Array.isArray(body.rows) ? body.rows : []
@@ -27,7 +31,7 @@ export async function POST(req: NextRequest) {
     try {
       const guest = await prisma.guest.create({
         data: {
-          weddingId: session.user.weddingId,
+          weddingId,
           token: generateToken(),
           firstName,
           lastName,

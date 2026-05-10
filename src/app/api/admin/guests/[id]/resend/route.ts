@@ -4,16 +4,20 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { getResend, FROM } from '@/lib/resend'
 import { renderGuestInvite } from '@/emails/GuestInvite'
+import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 
 type Params = { params: Promise<{ id: string }> }
 
-export async function POST(_req: NextRequest, { params }: Params) {
+export async function POST(req: NextRequest, { params }: Params) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
+
   const { id } = await params
   const guest = await prisma.guest.findFirst({
-    where: { id, weddingId: session.user.weddingId },
+    where: { id, weddingId },
     include: { wedding: true },
   })
 

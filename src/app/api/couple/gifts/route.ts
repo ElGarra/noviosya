@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid data', issues: parsed.error.issues }, { status: 400 })
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   const lastGift = await prisma.giftItem.findFirst({
     where: { weddingId },
     orderBy: { sortOrder: 'desc' },

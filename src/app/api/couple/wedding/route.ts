@@ -29,6 +29,7 @@ export async function PATCH(req: NextRequest) {
   const { weddingDate, venueMapsUrl, ...rest } = parsed.data
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   const wedding = await prisma.wedding.update({
     where: { id: weddingId },
     data: {

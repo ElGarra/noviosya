@@ -3,12 +3,14 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getEffectiveWeddingId } from '@/lib/weddingContext'
 
 export default async function CoupleDashboard() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/couple/login')
 
-  const weddingId = session.user.weddingId
+  const weddingId = await getEffectiveWeddingId(session)
+  if (!weddingId) redirect('/admin/dashboard')
 
   const [wedding, confirmed, declined, pending, totalGuests, totalGifts, reservedGifts] =
     await Promise.all([

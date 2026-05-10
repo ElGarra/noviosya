@@ -27,6 +27,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   const guest = await prisma.guest.findFirst({ where: { id, weddingId } })
   if (!guest) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
@@ -48,6 +49,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
 
   const { id } = await params
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
+  if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
   await prisma.guest.deleteMany({ where: { id, weddingId } })
   return NextResponse.json({ ok: true })
 }
