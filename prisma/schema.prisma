@@ -48,9 +48,9 @@ enum AdminRole {
 
 model WeddingAdmin {
   id           String    @id @default(cuid())
-  weddingId    String
-  wedding      Wedding   @relation(fields: [weddingId], references: [id], onDelete: Cascade)
-  email        String
+  weddingId    String?
+  wedding      Wedding?  @relation(fields: [weddingId], references: [id], onDelete: SetNull)
+  email        String    @unique
   passwordHash String
   role         AdminRole @default(COUPLE)
   name         String?
@@ -58,7 +58,6 @@ model WeddingAdmin {
 
   resetTokens  PasswordResetToken[]
 
-  @@unique([weddingId, email])
   @@index([weddingId, role])
 }
 

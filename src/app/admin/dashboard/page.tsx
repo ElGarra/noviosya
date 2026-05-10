@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { FeatureToggles } from './FeatureToggles'
 import { SwitchWeddingButton } from './SwitchWeddingButton'
 
 export default async function AdminDashboard() {
@@ -103,36 +102,6 @@ export default async function AdminDashboard() {
           </div>
         )}
 
-        {/* Panel rápido de la propia boda del admin */}
-        {session.user.weddingId && (() => {
-          const own = weddings.find(w => w.id === session.user.weddingId)
-          if (!own) return null
-          return (
-            <div className="bg-white shadow-sm p-6 space-y-4">
-              <p className="text-[0.65rem] tracking-[0.2em] uppercase text-text-muted">
-                Acceso rápido — {own.partner1Name} &amp; {own.partner2Name}
-              </p>
-              <FeatureToggles
-                weddingId={own.id}
-                rsvpEnabled={own.rsvpEnabled}
-                giftsEnabled={own.giftsEnabled}
-              />
-              <div className="flex flex-wrap gap-3 pt-2">
-                {[
-                  { href: '/couple/dashboard', label: 'Entrar como novios →' },
-                  { href: '/couple/guests',    label: 'Invitados' },
-                  { href: '/couple/gifts',     label: 'Regalos' },
-                  { href: '/admin/users',      label: 'Usuarios' },
-                ].map(({ href, label }) => (
-                  <Link key={href} href={href}
-                    className="text-sm border border-gold/30 text-text-muted px-4 py-2 hover:border-gold hover:text-gold transition-colors">
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )
-        })()}
 
       </div>
     </main>

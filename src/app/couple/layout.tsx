@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -23,6 +24,9 @@ export default async function CoupleLayout({ children }: { children: React.React
   const ctxWeddingId = session.user.role === 'ADMIN'
     ? cookieStore.get(WEDDING_CTX_COOKIE)?.value ?? null
     : null
+
+  // Admin without context switch has no wedding to manage here
+  if (session.user.role === 'ADMIN' && !ctxWeddingId) redirect('/admin/dashboard')
 
   const effectiveWeddingId = ctxWeddingId ?? session.user.weddingId
 

@@ -8,7 +8,7 @@ declare module 'next-auth' {
       name?: string | null
       email?: string | null
       image?: string | null
-      weddingId: string
+      weddingId: string | null
       role: 'ADMIN' | 'COUPLE'
     }
   }
