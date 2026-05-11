@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+type DateMode = 'none' | 'date' | 'datetime'
+
 interface CoupleUser {
   name:     string
   email:    string
@@ -17,11 +19,15 @@ export function NewWeddingForm() {
   const [form, setForm] = useState({
     partner1Name: '',
     partner2Name: '',
-    weddingDate:  '',
     venueName:    '',
     venueAddress: '',
+    venueMapsUrl: '',
     dressCode:    '',
   })
+
+  const [dateMode, setDateMode] = useState<DateMode>('none')
+  const [dateOnly, setDateOnly] = useState('')
+  const [dateTime, setDateTime] = useState('')
 
   const [couple, setCouple] = useState<CoupleUser[]>([
     { name: '', email: '', password: '' },
@@ -34,6 +40,13 @@ export function NewWeddingForm() {
 
   function setCoupleMember(i: number, key: keyof CoupleUser, val: string) {
     setCouple(c => c.map((m, idx) => idx === i ? { ...m, [key]: val } : m))
+  }
+
+  function buildWeddingDate(): string | null {
+    if (dateMode === 'none') return null
+    if (dateMode === 'date')     return dateOnly ? `${dateOnly}T12:00:00.000Z` : null
+    if (dateMode === 'datetime') return dateTime ? new Date(dateTime).toISOString() : null
+    return null
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -53,10 +66,11 @@ export function NewWeddingForm() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...form,
-        weddingDate: form.weddingDate ? new Date(form.weddingDate).toISOString() : null,
-        venueName:   form.venueName   || undefined,
-        venueAddress:form.venueAddress|| undefined,
-        dressCode:   form.dressCode   || undefined,
+        weddingDate:  buildWeddingDate(),
+        venueName:    form.venueName    || undefined,
+        venueAddress: form.venueAddress || undefined,
+        venueMapsUrl: form.venueMapsUrl || undefined,
+        dressCode:    form.dressCode    || undefined,
         couple: validCouple,
       }),
     })
@@ -74,6 +88,12 @@ export function NewWeddingForm() {
 
   const inputClass = 'w-full border border-gold/30 px-3 py-2 text-sm focus:outline-none focus:border-gold bg-white'
   const labelClass = 'block text-[0.68rem] tracking-[0.15em] uppercase text-text-muted mb-1'
+
+  const dateModes: { key: DateMode; label: string }[] = [
+    { key: 'none',     label: 'Sin confirmar' },
+    { key: 'date',     label: 'Solo fecha' },
+    { key: 'datetime', label: 'Fecha y hora' },
+  ]
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -98,11 +118,37 @@ export function NewWeddingForm() {
       {/* Boda */}
       <div className="bg-white shadow-sm p-6 space-y-4">
         <p className="text-[0.65rem] tracking-[0.2em] uppercase text-text-muted mb-2">Detalles (opcionales)</p>
+
+        <div>
+          <label className={labelClass}>Fecha</label>
+          <div className="flex gap-1 mb-2">
+            {dateModes.map(({ key, label }) => (
+              <button key={key} type="button"
+                onClick={() => setDateMode(key)}
+                className={`text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1.5 border transition-colors ${
+                  dateMode === key
+                    ? 'border-gold bg-gold text-white'
+                    : 'border-gold/30 text-text-muted hover:border-gold hover:text-gold'
+                }`}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {dateMode === 'date' && (
+            <input type="date" className={inputClass} value={dateOnly}
+              onChange={e => setDateOnly(e.target.value)} />
+          )}
+          {dateMode === 'datetime' && (
+            <input type="datetime-local" className={inputClass} value={dateTime}
+              onChange={e => setDateTime(e.target.value)} />
+          )}
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelClass}>Fecha y hora</label>
-            <input type="datetime-local" className={inputClass} value={form.weddingDate}
-              onChange={e => setField('weddingDate', e.target.value)} />
+            <label className={labelClass}>Venue</label>
+            <input className={inputClass} value={form.venueName}
+              onChange={e => setField('venueName', e.target.value)} placeholder="Casona San Ignacio" />
           </div>
           <div>
             <label className={labelClass}>Dress code</label>
@@ -111,14 +157,14 @@ export function NewWeddingForm() {
           </div>
         </div>
         <div>
-          <label className={labelClass}>Venue</label>
-          <input className={inputClass} value={form.venueName}
-            onChange={e => setField('venueName', e.target.value)} placeholder="Casona San Ignacio" />
-        </div>
-        <div>
           <label className={labelClass}>Dirección</label>
           <input className={inputClass} value={form.venueAddress}
             onChange={e => setField('venueAddress', e.target.value)} placeholder="Caupolicán 8611, Quilicura" />
+        </div>
+        <div>
+          <label className={labelClass}>Link Google Maps</label>
+          <input type="url" className={inputClass} value={form.venueMapsUrl}
+            onChange={e => setField('venueMapsUrl', e.target.value)} placeholder="https://maps.google.com/..." />
         </div>
       </div>
 
@@ -154,9 +200,7 @@ export function NewWeddingForm() {
         ))}
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <div className="flex gap-3">
         <button type="submit" disabled={saving}

@@ -51,11 +51,11 @@ export default function AccountPage() {
   }
 
   return (
-    <div>
+    <div className="max-w-lg mx-auto">
       <p className="text-[0.7rem] tracking-[0.3em] uppercase text-gold mb-1">Mi cuenta</p>
       <h1 className="font-serif italic text-3xl text-text-base mb-8">Cambiar contraseña</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 shadow-sm max-w-md space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white p-8 shadow-sm space-y-5">
         <div>
           <label className="block text-[0.65rem] tracking-widest uppercase text-text-muted mb-1.5">
             Contraseña actual

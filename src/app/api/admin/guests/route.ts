@@ -8,7 +8,8 @@ import { getEffectiveWeddingIdFromReq } from '@/lib/weddingContext'
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session || session.user.role !== 'ADMIN')
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const weddingId = getEffectiveWeddingIdFromReq(req, session)
   if (!weddingId) return NextResponse.json({ error: 'No wedding context' }, { status: 403 })
@@ -23,7 +24,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session || session.user.role !== 'ADMIN')
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const parsed = GuestCreateSchema.safeParse(body)

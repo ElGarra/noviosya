@@ -29,6 +29,7 @@ const CreateSchema = z.object({
   weddingDate:  z.string().datetime().optional().nullable(),
   venueName:    z.string().max(200).optional(),
   venueAddress: z.string().max(300).optional(),
+  venueMapsUrl: z.string().url().optional().or(z.literal('')),
   dressCode:    z.string().max(200).optional(),
   couple: z.array(z.object({
     name:     z.string().min(1).max(100),
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success)
     return NextResponse.json({ error: 'Invalid data', issues: (parsed as { success: false; error: { issues: unknown[] } }).error?.issues }, { status: 400 })
 
-  const { partner1Name, partner2Name, weddingDate, venueName, venueAddress, dressCode, couple } = parsed.data
+  const { partner1Name, partner2Name, weddingDate, venueName, venueAddress, venueMapsUrl, dressCode, couple } = parsed.data
 
   const slug = generateWeddingSlug(partner1Name, partner2Name)
   if (!isValidSlug(slug))
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
       weddingDate:  weddingDate ? new Date(weddingDate) : null,
       venueName:    venueName    || null,
       venueAddress: venueAddress || null,
+      venueMapsUrl: venueMapsUrl || null,
       dressCode:    dressCode    || null,
       admins: {
         create: await Promise.all(couple.map(async (u) => ({

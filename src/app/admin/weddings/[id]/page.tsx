@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { FeatureToggles } from '@/app/admin/dashboard/FeatureToggles'
 import { SwitchWeddingButton } from '@/app/admin/dashboard/SwitchWeddingButton'
+import { WeddingEditForm } from './WeddingEditForm'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -69,6 +70,18 @@ export default async function ManageWeddingPage({ params }: Props) {
             </div>
           ))}
         </div>
+
+        {/* Editar datos */}
+        <WeddingEditForm
+          weddingId={wedding.id}
+          partner1Name={wedding.partner1Name}
+          partner2Name={wedding.partner2Name}
+          weddingDate={wedding.weddingDate?.toISOString() ?? null}
+          venueName={wedding.venueName}
+          venueAddress={wedding.venueAddress}
+          venueMapsUrl={wedding.venueMapsUrl}
+          dressCode={wedding.dressCode}
+        />
 
         {/* Features */}
         <div className="bg-white shadow-sm p-6">
