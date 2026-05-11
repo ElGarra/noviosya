@@ -17,7 +17,26 @@ function parseDateMode(date: Date | null): { mode: DateMode; dateOnly: string; d
   }
 }
 
-export function WeddingForm({ wedding }: { wedding: Wedding }) {
+function LockedToggle({ label, description, enabled }: { label: string; description: string; enabled: boolean }) {
+  return (
+    <div className="flex items-center justify-between p-4 border border-gold/20 opacity-60 select-none">
+      <div>
+        <p className="text-sm font-medium text-text-base flex items-center gap-1.5">
+          {label}
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="text-text-muted/60" aria-hidden="true">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+        </p>
+        <p className="text-xs text-text-muted mt-0.5">{description}</p>
+      </div>
+      <div className={`relative w-10 h-5 rounded-full pointer-events-none ${enabled ? 'bg-gold' : 'bg-gold/20'}`}>
+        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${enabled ? 'left-5' : 'left-0.5'}`} />
+      </div>
+    </div>
+  )
+}
+
+export function WeddingForm({ wedding }: { wedding: Pick<Wedding, 'partner1Name' | 'partner2Name' | 'weddingDate' | 'venueName' | 'venueAddress' | 'venueMapsUrl' | 'dressCode' | 'rsvpEnabled' | 'giftsEnabled'> }) {
   const parsed = parseDateMode(wedding.weddingDate)
 
   const [form, setForm] = useState({
@@ -130,6 +149,23 @@ export function WeddingForm({ wedding }: { wedding: Wedding }) {
           <input className={inputClass} value={form.dressCode}
             onChange={e => setForm(f => ({ ...f, dressCode: e.target.value }))}
             placeholder="Ej. Formal, Semi-formal..." />
+        </div>
+      </div>
+
+      <div className="bg-white p-6 shadow-sm">
+        <p className="text-[0.65rem] tracking-[0.2em] uppercase text-text-muted mb-1">Funcionalidades activas</p>
+        <p className="text-xs text-text-muted/60 mb-4">Gestionado por el administrador de la plataforma.</p>
+        <div className="space-y-2">
+          <LockedToggle
+            label="Confirmación de asistencia (RSVP)"
+            description="Los invitados pueden confirmar o declinar su asistencia"
+            enabled={wedding.rsvpEnabled}
+          />
+          <LockedToggle
+            label="Lista de regalos"
+            description="Los invitados pueden ver y reservar regalos"
+            enabled={wedding.giftsEnabled}
+          />
         </div>
       </div>
 

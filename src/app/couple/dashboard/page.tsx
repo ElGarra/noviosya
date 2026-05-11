@@ -82,10 +82,7 @@ export default async function CoupleDashboard() {
 
       {!rsvpEnabled && (
         <p className="text-xs text-text-muted/60 -mt-5 mb-6 text-right">
-          RSVP desactivado —{' '}
-          <Link href="/couple/wedding" className="hover:text-gold transition-colors underline">
-            activar
-          </Link>
+          RSVP desactivado — contacta al administrador para activarlo
         </p>
       )}
 
@@ -98,8 +95,7 @@ export default async function CoupleDashboard() {
           </h2>
           {!giftsEnabled && (
             <p className="text-[0.65rem] tracking-[0.1em] uppercase text-gold/70 mb-3">
-              Desactivado en landing ·{' '}
-              <Link href="/couple/wedding" className="underline hover:text-gold">activar</Link>
+              Desactivado — contacta al administrador
             </p>
           )}
           <p className="text-text-muted text-sm mb-4">
