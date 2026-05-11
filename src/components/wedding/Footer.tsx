@@ -26,7 +26,7 @@ export function Footer({ partner1Name, partner2Name, weddingDate }: FooterProps)
       </p>
       {/* Subtle panel access — intentionally low contrast */}
       <p className="mt-8 text-[0.55rem] tracking-[0.3em] text-text-muted/30 hover:text-text-muted/60 transition-colors">
-        <Link href="/couple/login" className="hover:text-gold/60 transition-colors">
+        <Link href="/login" className="hover:text-gold/60 transition-colors">
           · acceso ·
         </Link>
       </p>

@@ -5,7 +5,7 @@ import { NewWeddingForm } from './NewWeddingForm'
 
 export default async function NewWeddingPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') redirect('/couple/login')
+  if (!session || session.user.role !== 'ADMIN') redirect('/login')
 
   return (
     <main className="min-h-svh bg-cream px-4 py-12">

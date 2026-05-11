@@ -7,7 +7,7 @@ import { WeddingForm } from './WeddingForm'
 
 export default async function WeddingPage() {
   const session = await getServerSession(authOptions)
-  if (!session) redirect('/couple/login')
+  if (!session) redirect('/login')
 
   const weddingId = await getEffectiveWeddingId(session)
   if (!weddingId) redirect('/admin/dashboard')

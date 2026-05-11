@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma'
 import { SessionProvider } from '@/app/admin/SessionProvider'
 import { WEDDING_CTX_COOKIE } from '@/lib/weddingContext'
 import { AdminBanner } from './AdminBanner'
+import { LogoutButton } from '@/components/LogoutButton'
 
 const BASE_NAV = [
   { href: '/couple/dashboard', label: 'Inicio',       feature: null },
@@ -75,6 +76,7 @@ export default async function CoupleLayout({ children }: { children: React.React
                 Admin
               </Link>
             )}
+            <LogoutButton className="text-xs tracking-[0.15em] uppercase text-text-muted hover:text-gold transition-colors" />
           </div>
         </header>
         <main className="flex-1 px-4 py-10 max-w-5xl mx-auto w-full">

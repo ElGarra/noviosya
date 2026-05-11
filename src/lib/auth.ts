@@ -13,7 +13,7 @@ function getIp(req: Record<string, unknown>): string {
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
-  pages: { signIn: '/couple/login' },
+  pages: { signIn: '/login' },
   providers: [
     CredentialsProvider({
       name: 'credentials',

@@ -7,7 +7,7 @@ import { SwitchWeddingButton } from './SwitchWeddingButton'
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') redirect('/couple/login')
+  if (!session || session.user.role !== 'ADMIN') redirect('/login')
 
   const weddings = await prisma.wedding.findMany({
     orderBy: { createdAt: 'desc' },

@@ -7,7 +7,7 @@ import { GiftManager } from './GiftManager'
 
 export default async function GiftsPage() {
   const session = await getServerSession(authOptions)
-  if (!session) redirect('/couple/login')
+  if (!session) redirect('/login')
 
   const weddingId = await getEffectiveWeddingId(session)
   if (!weddingId) redirect('/admin/dashboard')

@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
               Si tu email está registrado, recibirás un link para restablecer tu contraseña.
               Revisá tu bandeja de entrada (y spam).
             </p>
-            <Link href="/couple/login" className="block mt-6 text-gold text-sm underline">
+            <Link href="/login" className="block mt-6 text-gold text-sm underline">
               Volver al login
             </Link>
           </div>
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
               className="w-full bg-gold text-white py-3 text-sm tracking-[0.15em] uppercase disabled:opacity-50">
               {loading ? 'Enviando...' : 'Enviar link'}
             </button>
-            <Link href="/couple/login" className="block text-center text-text-muted text-xs hover:text-gold">
+            <Link href="/login" className="block text-center text-text-muted text-xs hover:text-gold">
               Volver al login
             </Link>
           </form>

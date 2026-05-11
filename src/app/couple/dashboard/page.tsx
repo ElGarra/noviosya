@@ -7,7 +7,7 @@ import { getEffectiveWeddingId } from '@/lib/weddingContext'
 
 export default async function CoupleDashboard() {
   const session = await getServerSession(authOptions)
-  if (!session) redirect('/couple/login')
+  if (!session) redirect('/login')
 
   const weddingId = await getEffectiveWeddingId(session)
   if (!weddingId) redirect('/admin/dashboard')

@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
     })
 
     if (res.ok) {
-      router.push('/couple/login?reset=1')
+      router.push('/login?reset=1')
     } else {
       const data = await res.json()
       setError(data.error ?? 'Error inesperado')

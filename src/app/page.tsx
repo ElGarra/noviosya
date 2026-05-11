@@ -63,7 +63,7 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="px-6 py-5 flex items-center justify-between max-w-5xl mx-auto">
         <span className="font-serif italic text-2xl text-gold tracking-wide">noviosya</span>
-        <Link href="/couple/login"
+        <Link href="/login"
           className="text-[0.7rem] tracking-[0.25em] uppercase text-text-muted hover:text-gold transition-colors">
           Acceso
         </Link>

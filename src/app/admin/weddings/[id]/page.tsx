@@ -10,7 +10,7 @@ type Props = { params: Promise<{ id: string }> }
 
 export default async function ManageWeddingPage({ params }: Props) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') redirect('/couple/login')
+  if (!session || session.user.role !== 'ADMIN') redirect('/login')
 
   const { id } = await params
   const wedding = await prisma.wedding.findUnique({
