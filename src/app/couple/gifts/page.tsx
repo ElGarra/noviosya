@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getEffectiveWeddingId } from '@/lib/weddingContext'
+import Link from 'next/link'
 import { GiftManager } from './GiftManager'
 
 export default async function GiftsPage() {
@@ -43,9 +44,9 @@ export default async function GiftsPage() {
             </svg>
             Los invitados no ven esta sección — la lista de regalos está desactivada en tu landing.
           </div>
-          <a href="/couple/wedding" className="text-gold text-xs tracking-wide hover:opacity-70 shrink-0 ml-4">
+          <Link href="/couple/wedding" className="text-gold text-xs tracking-wide hover:opacity-70 shrink-0 ml-4">
             Activar →
-          </a>
+          </Link>
         </div>
       )}
 
