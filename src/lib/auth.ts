@@ -52,13 +52,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         const u = user as { id: string; weddingId: string | null; role: string; name?: string | null }
         token.id        = u.id
         token.weddingId = u.weddingId ?? undefined
         token.role      = u.role
         token.name      = u.name
+      }
+      if (trigger === 'update' && typeof session?.name === 'string') {
+        token.name = session.name
       }
       return token
     },
