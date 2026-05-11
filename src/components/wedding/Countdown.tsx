@@ -47,10 +47,10 @@ export function Countdown({ weddingDate }: CountdownProps) {
   const units = dateOnly
     ? [{ value: time ? String(time.days) : '—', label: 'Días' }]
     : [
-        { value: time ? pad(time.days),    label: 'Días' },
-        { value: time ? pad(time.hours),   label: 'Horas' },
-        { value: time ? pad(time.minutes), label: 'Minutos' },
-        { value: time ? pad(time.seconds), label: 'Segundos' },
+        { value: time ? pad(time.days)    : '—', label: 'Días' },
+        { value: time ? pad(time.hours)   : '—', label: 'Horas' },
+        { value: time ? pad(time.minutes) : '—', label: 'Minutos' },
+        { value: time ? pad(time.seconds) : '—', label: 'Segundos' },
       ]
 
   return (
