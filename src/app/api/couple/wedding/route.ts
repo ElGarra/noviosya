@@ -13,8 +13,6 @@ const schema = z.object({
   venueAddress:  z.string().max(300).optional(),
   venueMapsUrl:  z.string().url().optional().or(z.literal('')),
   dressCode:     z.string().max(200).optional(),
-  rsvpEnabled:   z.boolean().optional(),
-  giftsEnabled:  z.boolean().optional(),
 })
 
 export async function PATCH(req: NextRequest) {

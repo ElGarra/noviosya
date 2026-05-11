@@ -27,8 +27,6 @@ export function WeddingForm({ wedding }: { wedding: Wedding }) {
     venueAddress:  wedding.venueAddress ?? '',
     venueMapsUrl:  wedding.venueMapsUrl ?? '',
     dressCode:     wedding.dressCode ?? '',
-    rsvpEnabled:   wedding.rsvpEnabled,
-    giftsEnabled:  wedding.giftsEnabled,
   })
   const [dateMode, setDateMode] = useState<DateMode>(parsed.mode)
   const [dateOnly, setDateOnly] = useState(parsed.dateOnly)
@@ -42,22 +40,6 @@ export function WeddingForm({ wedding }: { wedding: Wedding }) {
     if (dateMode === 'date')     return dateOnly ? `${dateOnly}T12:00:00.000Z` : null
     if (dateMode === 'datetime') return dateTime ? new Date(dateTime).toISOString() : null
     return null
-  }
-
-  function toggle(label: string, description: string, key: 'rsvpEnabled' | 'giftsEnabled') {
-    return (
-      <label key={key} className="flex items-center justify-between p-4 border border-gold/20 cursor-pointer hover:border-gold/40 transition-colors">
-        <div>
-          <p className="text-sm font-medium text-text-base">{label}</p>
-          <p className="text-xs text-text-muted mt-0.5">{description}</p>
-        </div>
-        <div
-          onClick={() => setForm(f => ({ ...f, [key]: !f[key] }))}
-          className={`relative w-10 h-5 rounded-full transition-colors ${form[key] ? 'bg-gold' : 'bg-gold/20'}`}>
-          <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${form[key] ? 'left-5' : 'left-0.5'}`} />
-        </div>
-      </label>
-    )
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -148,14 +130,6 @@ export function WeddingForm({ wedding }: { wedding: Wedding }) {
           <input className={inputClass} value={form.dressCode}
             onChange={e => setForm(f => ({ ...f, dressCode: e.target.value }))}
             placeholder="Ej. Formal, Semi-formal..." />
-        </div>
-      </div>
-
-      <div className="bg-white p-6 shadow-sm">
-        <p className="text-[0.65rem] tracking-[0.2em] uppercase text-text-muted mb-4">Funcionalidades activas</p>
-        <div className="space-y-2">
-          {toggle('Confirmación de asistencia (RSVP)', 'Los invitados pueden confirmar o declinar su asistencia', 'rsvpEnabled')}
-          {toggle('Lista de regalos', 'Los invitados pueden ver y reservar regalos', 'giftsEnabled')}
         </div>
       </div>
 
