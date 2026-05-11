@@ -36,6 +36,11 @@ function DetailCard({ icon, title, children }: {
   )
 }
 
+// Noon UTC is the sentinel used by "Solo fecha" mode — time is TBD
+function isDateOnly(date: Date): boolean {
+  return date.getUTCHours() === 12 && date.getUTCMinutes() === 0 && date.getUTCSeconds() === 0
+}
+
 function formatDate(date: Date | null): string {
   if (!date) return ''
   return date.toLocaleDateString('es-CL', {
@@ -47,8 +52,7 @@ function formatDate(date: Date | null): string {
   })
 }
 
-function formatTime(date: Date | null): string {
-  if (!date) return ''
+function formatTime(date: Date): string {
   return date.toLocaleTimeString('es-CL', {
     hour: '2-digit',
     minute: '2-digit',
@@ -138,10 +142,10 @@ export function EventDetails({
                 <li key={i}><span className="text-gold">{item.time}</span> — {item.label}</li>
               ))}
             </ul>
-          ) : weddingDate ? (
+          ) : weddingDate && !isDateOnly(weddingDate) ? (
             <p className="text-[0.78rem] tracking-wide text-text-muted">{formatTime(weddingDate)} hs</p>
           ) : (
-            <TbdBadge />
+            <TbdBadge text={weddingDate ? 'Hora por confirmar' : 'Por confirmar'} />
           )}
         </DetailCard>
       </div>

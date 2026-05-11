@@ -27,9 +27,14 @@ function getTimeLeft(target: Date): TimeLeft {
   }
 }
 
+function isDateOnly(isoDate: string): boolean {
+  const d = new Date(isoDate)
+  return d.getUTCHours() === 12 && d.getUTCMinutes() === 0 && d.getUTCSeconds() === 0
+}
+
 export function Countdown({ weddingDate }: CountdownProps) {
-  const target = weddingDate ? new Date(weddingDate) : null
-  // Start as null — avoids SSR/client hydration mismatch from Date.now()
+  const target    = weddingDate ? new Date(weddingDate) : null
+  const dateOnly  = weddingDate ? isDateOnly(weddingDate) : false
   const [time, setTime] = useState<TimeLeft | null>(null)
 
   useEffect(() => {
@@ -38,6 +43,15 @@ export function Countdown({ weddingDate }: CountdownProps) {
     const id = setInterval(() => setTime(getTimeLeft(target)), 1000)
     return () => clearInterval(id)
   }, [weddingDate]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const units = dateOnly
+    ? [{ value: time ? String(time.days) : '—', label: 'Días' }]
+    : [
+        { value: time ? pad(time.days),    label: 'Días' },
+        { value: time ? pad(time.hours),   label: 'Horas' },
+        { value: time ? pad(time.minutes), label: 'Minutos' },
+        { value: time ? pad(time.seconds), label: 'Segundos' },
+      ]
 
   return (
     <section className="bg-cream px-6 py-20 text-center">
@@ -49,14 +63,9 @@ export function Countdown({ weddingDate }: CountdownProps) {
         Contando los días
       </h2>
 
-      {time ? (
+      {weddingDate ? (
         <div className="flex justify-center flex-wrap gap-4 sm:gap-12">
-          {[
-            { value: pad(time.days),    label: 'Días' },
-            { value: pad(time.hours),   label: 'Horas' },
-            { value: pad(time.minutes), label: 'Minutos' },
-            { value: pad(time.seconds), label: 'Segundos' },
-          ].map(({ value, label }, i) => (
+          {units.map(({ value, label }, i) => (
             <Fragment key={label}>
               {i > 0 && (
                 <span
